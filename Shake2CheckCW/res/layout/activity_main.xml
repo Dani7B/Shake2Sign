@@ -16,15 +16,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="12dp"
         android:text="@string/name" />
-        <!--  android:text="@string/bottone" -->
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText1"
-        android:layout_alignRight="@+id/button1"
-        android:layout_alignTop="@+id/chronometer" />
 
     <EditText
         android:id="@+id/editText1"
@@ -32,28 +23,52 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/chronometer"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="39dp"
+        android:layout_marginTop="49dp"
         android:ems="10"
-        android:inputType="textPersonName" >
+        android:inputType="textPersonName" />
 
-        <requestFocus />
-    </EditText>
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/textView1"
+        android:layout_below="@+id/TextView2"
+        android:layout_marginTop="46dp"
+        android:onClick="startRecording" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/editText1"
+        android:layout_alignLeft="@+id/editText1"
+        android:layout_alignRight="@+id/TextView2"
+        android:layout_alignTop="@+id/chronometer"
+        android:gravity="left" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView1"
+        android:layout_alignLeft="@+id/textView1"
+        android:onClick="startChecking" />
 
     <Chronometer
         android:id="@+id/chronometer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_alignRight="@+id/editText1"
-        android:layout_below="@+id/imageView1"
-        android:layout_marginTop="43dp" />
+        android:layout_marginTop="97dp" />
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="110dp"
-        android:layout_height="70dp"
-        android:layout_alignLeft="@+id/TextView2"
-        android:layout_alignParentTop="true"
         android:contentDescription="@string/logo"
+        android:layout_width="100dp"
+        android:layout_height="70dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:src="@drawable/romatre" />
 
     <TextView
@@ -62,16 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/button1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="34dp"
+        android:layout_marginTop="60dp"
         android:text="@string/instruction" />
-
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/TextView2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="49dp"
-        android:onClick="startRecording" />
 
 </RelativeLayout>

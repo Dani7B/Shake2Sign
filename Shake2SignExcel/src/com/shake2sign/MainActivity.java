@@ -13,6 +13,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -44,6 +45,8 @@ public class MainActivity extends Activity implements SensorEventListener {
     private Button button;
     private String value;
     
+    private static int GREEN = Color.parseColor("#00CC66");
+    private static int RED = Color.parseColor("#FF0033");
     private List<float[]> dataAcc;
     private List<Object[]> dataGir;
 
@@ -62,6 +65,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 		recordingText = (TextView) findViewById(R.id.textView3);
 		button = (Button) findViewById(R.id.button1);
 		button.setText("Start recording");
+		button.setBackgroundColor(GREEN);
 		dataAcc = new ArrayList<float[]>();
 		dataGir = new ArrayList<Object[]>();
 		initListeners();
@@ -91,7 +95,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 				alertDialog.show();
 			}
 			else {
+				button.setBackgroundColor(RED);
 				button.setText("Stop recording");
+				
 				
 				dataAcc = new ArrayList<float[]>();
 				dataGir = new ArrayList<Object[]>();
@@ -102,6 +108,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 					recording = true;
 					initTime = Calendar.getInstance().getTimeInMillis();
 					recordingText.setText("Recording");
+					recordingText.setTextColor(GREEN);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -152,7 +159,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 				recording = false;
 				chronometer.stop();
 				
-				recordingText.setText("Not recording");
+				recordingText.setText("");
+				button.setBackgroundColor(GREEN);
 				button.setText("Start recording");
 			}
 			catch (Exception e) {

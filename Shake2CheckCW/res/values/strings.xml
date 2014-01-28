@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Shake2Sign</string>
+    <string name="app_name">Shake2Check</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="bottone">Start Recording</string>
-    <string name="instruction">Tap the button above to start recording. Move the device around as you please.</string>
+    <string name="instruction">Tap the buttons above to start checking/recording. Move the device around as you please.</string>
     <string name="chronometer">Chronometer</string>
     <string name="name">Insert your name</string>
     <string name="logo">Roma Tre logo</string>
