@@ -143,200 +143,184 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 	
 	public void startRecording(View view) {
-		if(!checking) {
-			if(!recording){
-				//initListeners();
-				
-				value = name.getText().toString();
-				if(value == null || value.compareTo("") == 0) {
-					AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-					alertDialog.setTitle("Name Missing");
-					alertDialog.setMessage("Write your name in the appropriate field");
+		if(!recording){			
+			value = name.getText().toString();
+			if(value == null || value.compareTo("") == 0) {
+				AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+				alertDialog.setTitle("Name Missing");
+				alertDialog.setMessage("Write your name in the appropriate field");
+				alertDialog.setCancelable(true);
+				alertDialog.show();
+			}
+			else {
+				String filename = value + ".xls";
+				sd = Environment.getExternalStorageDirectory();
+			    file = new File(sd, filename);
+				if(file.exists()) { 
+			    	AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+					alertDialog.setTitle("Already registered");
+					alertDialog.setMessage("You've already registered before. \n"
+							+ "Please, check your identity.");
 					alertDialog.setCancelable(true);
 					alertDialog.show();
 				}
 				else {
-					String filename = value + ".xls";
-					sd = Environment.getExternalStorageDirectory();
-				    file = new File(sd, filename);
-					if(file.exists()) { 
-				    	AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-						alertDialog.setTitle("Already registered");
-						alertDialog.setMessage("You've already registered before. \n"
-								+ "Please, check your identity.");
-						alertDialog.setCancelable(true);
-						alertDialog.show();
-					}
-					else {
-						button.setBackgroundColor(BLUE);
-						button.setText("Stop recording");
-	
-						data = new ArrayList<List<Float>>(6);
-					    for(int i=0; i<6; i++){
-					    	data.add(new ArrayList<Float>());
-					    }
-					    times = new ArrayList<Long>();
-					    
-		                chronometer.setBase(SystemClock.elapsedRealtime());
-						chronometer.start();
-						recording = true;
-						initTime = Calendar.getInstance().getTimeInMillis();
-						recordingText.setTextColor(BLUE);
-						recordingText.setText("Recording");
-					}
+					button.setBackgroundColor(BLUE);
+					button.setText("Stop recording");
+
+					data = new ArrayList<List<Float>>(6);
+				    for(int i=0; i<6; i++){
+				    	data.add(new ArrayList<Float>());
+				    }
+				    times = new ArrayList<Long>();
+				    
+	                chronometer.setBase(SystemClock.elapsedRealtime());
+					chronometer.start();
+					recording = true;
+					initTime = Calendar.getInstance().getTimeInMillis();
+					recordingText.setTextColor(BLUE);
+					recordingText.setText("Recording");
+					checkingButton.setClickable(false);
 				}
-			}
-			else {
-				long deltaTime = Calendar.getInstance().getTimeInMillis() - this.initTime;
-				chronometer.stop();
-	
-				HSSFWorkbook workbook = new HSSFWorkbook();
-				HSSFSheet sheet = workbook.createSheet(value);
-				
-				Row row = null;
-				int rownum = 0;
-		    	int cellnum = 0;
-		    	for(int i=0; i<data.get(0).size(); i++) {
-					row = sheet.createRow(rownum++);
-			    	cellnum = 0;
-			    	for(int j=0; j<6; j++) {
-			    		List<Float> f = data.get(j);
-			    		row.createCell(cellnum++, Cell.CELL_TYPE_NUMERIC).setCellValue(f.get(i));
-			    	}
-			    	row.createCell(cellnum++, Cell.CELL_TYPE_NUMERIC).setCellValue(times.get(i));
-		    	}
-		    	
-				row = sheet.createRow(rownum++);
-		    	row.createCell(0, Cell.CELL_TYPE_NUMERIC).setCellValue((double)deltaTime);
-	
-				String filename = value + ".xls";
-				sd = Environment.getExternalStorageDirectory();
-			    file = new File(sd, filename);
-				try {
-				    FileOutputStream out = new FileOutputStream(file);
-				    workbook.write(out);
-				    out.flush();
-				    out.close();				     
-				} catch (FileNotFoundException e) {
-				    e.printStackTrace();
-				} catch (IOException e) {
-				    e.printStackTrace();
-				}
-				
-				recording = false;
-				recordingText.setText("");
-				button.setBackgroundColor(GRAY);
-				button.setText("Start recording");
 			}
 		}
 		else {
-			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-			alertDialog.setTitle("Mind you!");
-			alertDialog.setMessage("You're currently checking. Press STOP CHECKING before recording again.");
-			alertDialog.setCancelable(true);
-			alertDialog.show();
+			long deltaTime = Calendar.getInstance().getTimeInMillis() - this.initTime;
+			chronometer.stop();
+
+			HSSFWorkbook workbook = new HSSFWorkbook();
+			HSSFSheet sheet = workbook.createSheet(value);
+			
+			Row row = null;
+			int rownum = 0;
+	    	int cellnum = 0;
+	    	for(int i=0; i<data.get(0).size(); i++) {
+				row = sheet.createRow(rownum++);
+		    	cellnum = 0;
+		    	for(int j=0; j<6; j++) {
+		    		List<Float> f = data.get(j);
+		    		row.createCell(cellnum++, Cell.CELL_TYPE_NUMERIC).setCellValue(f.get(i));
+		    	}
+		    	row.createCell(cellnum++, Cell.CELL_TYPE_NUMERIC).setCellValue(times.get(i));
+	    	}
+	    	
+			row = sheet.createRow(rownum++);
+	    	row.createCell(0, Cell.CELL_TYPE_NUMERIC).setCellValue((double)deltaTime);
+
+			String filename = value + ".xls";
+			sd = Environment.getExternalStorageDirectory();
+		    file = new File(sd, filename);
+			try {
+			    FileOutputStream out = new FileOutputStream(file);
+			    workbook.write(out);
+			    out.flush();
+			    out.close();				     
+			} catch (FileNotFoundException e) {
+			    e.printStackTrace();
+			} catch (IOException e) {
+			    e.printStackTrace();
+			}
+			
+			recording = false;
+			recordingText.setText("");
+			button.setBackgroundColor(GRAY);
+			button.setText("Start recording");
+			checkingButton.setClickable(true);
 		}
 	}
 	
 	public void startChecking(View view) {
 		
-		if(!recording) {
-			if(!checking){
-				//initListeners();
-				value = name.getText().toString();
-				if(value == null || value.compareTo("") == 0) {
-					AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-					alertDialog.setTitle("Name Missing");
-					alertDialog.setMessage("Write your name in the appropriate field");
+		if(!checking){
+			value = name.getText().toString();
+			if(value == null || value.compareTo("") == 0) {
+				AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+				alertDialog.setTitle("Name Missing");
+				alertDialog.setMessage("Write your name in the appropriate field");
+				alertDialog.setCancelable(true);
+				alertDialog.show();
+			}
+			else {
+				
+				reInitializeSensorData();
+				
+				String filename = value + ".xls";
+				sd = Environment.getExternalStorageDirectory();
+			    file = new File(sd, filename);
+			    
+			    if(!file.exists()) { 
+			    	AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+					alertDialog.setTitle("File Missing");
+					alertDialog.setMessage("You've never registered before. \n"
+							+ "Please, register before verifying your identity.");
 					alertDialog.setCancelable(true);
 					alertDialog.show();
 				}
 				else {
-					
-					reInitializeSensorData();
-					
-					String filename = value + ".xls";
-					sd = Environment.getExternalStorageDirectory();
-				    file = new File(sd, filename);
-				    
-				    if(!file.exists()) { 
-				    	AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-						alertDialog.setTitle("File Missing");
-						alertDialog.setMessage("You've never registered before. \n"
-								+ "Please, register before verifying your identity.");
-						alertDialog.setCancelable(true);
-						alertDialog.show();
-					}
-					else {
-						checkingButton.setBackgroundColor(BLUE);
-						checkingButton.setText("Stop checking");
-		                chronometer.setBase(SystemClock.elapsedRealtime());
-						chronometer.start();
-						checking = true;
-						initTime = Calendar.getInstance().getTimeInMillis();
-						recordingText.setTextColor(BLUE);
-						recordingText.setText("Checking");
-					}
-				}
-			}
-			else {
-				try {
-					long lasting = Calendar.getInstance().getTimeInMillis() - this.initTime;
-					chronometer.stop();
-					FileInputStream fInput = new FileInputStream(file);
-					HSSFWorkbook workbook = new HSSFWorkbook(fInput);
-					HSSFSheet sheet = workbook.getSheetAt(0);
-					
-					
-					for (int j=0; j<sheet.getLastRowNum(); j++) {
-				        Row row = sheet.getRow(j);
-				        for(int i=0; i<6; i++) {
-				        	checkingdata.get(i).add(row.getCell(i).getNumericCellValue());
-				        }
-				        
-				    }
-					
-			        double recLast = sheet.getRow(sheet.getLastRowNum()).getCell(0).getNumericCellValue();
-				    fInput.close();
-					
-				    
-					double corr = correlation(data, checkingdata, lasting, recLast);
-					
-					
-					reInitializeSensorData();
-					checking = false;
-					recordingText.setText("");
-					checkingButton.setBackgroundColor(GRAY);
-					checkingButton.setText("Start checking");
-					NumberFormat formatter = new DecimalFormat("#0.00");
-					if(corr>0.7) {
-						AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-						alertDialog.setTitle("PASS");
-						alertDialog.setMessage("You've successfully authenticated."
-								+ "\n Score: " + formatter.format(corr*100)  + "%.");
-						alertDialog.setCancelable(true);
-						alertDialog.show();
-					}
-					else {
-						AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-						alertDialog.setTitle("FAIL");
-						alertDialog.setMessage("Sorry. Try again."
-								+ "\n Score: " + formatter.format(corr*100) + "%.");
-						alertDialog.setCancelable(true);
-						alertDialog.show();
-					}
-				}
-				catch (Exception e) {
-			    	 e.printStackTrace();
+					checkingButton.setBackgroundColor(BLUE);
+					checkingButton.setText("Stop checking");
+					button.setClickable(false);
+	                chronometer.setBase(SystemClock.elapsedRealtime());
+					chronometer.start();
+					checking = true;
+					initTime = Calendar.getInstance().getTimeInMillis();
+					recordingText.setTextColor(BLUE);
+					recordingText.setText("Checking");
 				}
 			}
 		}
 		else {
-			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-			alertDialog.setTitle("Mind you!");
-			alertDialog.setMessage("You're currently recording. Press STOP RECORDING before checking.");
-			alertDialog.setCancelable(true);
-			alertDialog.show();
+			try {
+				long lasting = Calendar.getInstance().getTimeInMillis() - this.initTime;
+				chronometer.stop();
+				FileInputStream fInput = new FileInputStream(file);
+				HSSFWorkbook workbook = new HSSFWorkbook(fInput);
+				HSSFSheet sheet = workbook.getSheetAt(0);
+				
+				
+				for (int j=0; j<sheet.getLastRowNum(); j++) {
+			        Row row = sheet.getRow(j);
+			        for(int i=0; i<6; i++) {
+			        	checkingdata.get(i).add(row.getCell(i).getNumericCellValue());
+			        }
+			        
+			    }
+				
+		        double recLast = sheet.getRow(sheet.getLastRowNum()).getCell(0).getNumericCellValue();
+			    fInput.close();
+				
+			    
+				double corr = correlation(data, checkingdata, lasting, recLast);
+				
+				
+				reInitializeSensorData();
+				checking = false;
+				recordingText.setText("");
+				checkingButton.setBackgroundColor(GRAY);
+				checkingButton.setText("Start checking");
+				NumberFormat formatter = new DecimalFormat("#0.00");
+				if(corr>0.7) {
+					AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+					alertDialog.setTitle("PASS");
+					alertDialog.setMessage("You've successfully authenticated."
+							+ "\n Score: " + formatter.format(corr*100)  + "%.");
+					alertDialog.setCancelable(true);
+					alertDialog.show();
+				}
+				else {
+					AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+					alertDialog.setTitle("FAIL");
+					alertDialog.setMessage("Sorry. Try again."
+							+ "\n Score: " + formatter.format(corr*100) + "%.");
+					alertDialog.setCancelable(true);
+					alertDialog.show();
+				}
+				button.setClickable(true);
+
+			}
+			catch (Exception e) {
+		    	 e.printStackTrace();
+			}
 		}
 	}
 	
